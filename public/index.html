@@ -1,0 +1,65 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="udbyesTodo">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Udbyes gate</title>
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:50px; }
+		#todo-list 				{ margin-bottom:30px; }
+		#todo-form 	 			{ margin-bottom:50px; }
+	</style>
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+	
+	<script src="js/controllers/main.js"></script>
+	<script src="js/services/todolists.js"></script>
+	<script src="js/core.js"></script>
+	
+
+</head>
+
+<body ng-controller="mainController">
+
+	<div class="container">
+		<form>
+		<!--Input form for creating new todolists - not working right now and should be changed to just a plus sign-->
+			<input type="text" ng-model= "todolist.title" class="form-control input-sm text-center" placeholder="Todolist title">
+
+			<button type="submit" class="btn btn-default btn-sm" ng-click="createTodolist()">Add new todolist</button>
+		</form>
+
+		<section class="panel panel-default" ng-repeat="todolist in todolists">
+				<header class="panel-heading text-center">{{todolist.title}}</header>
+				
+				<!--THE TODOLIST-->
+					<div class="checkbox" ng-repeat="todo in todolist.todos">
+						<label>
+							<input type="checkbox" ng-click="deleteTodo(todolist._id, todo._id)"> {{todo.text}}
+						</label>
+					</div>
+
+				<!--Form to create new todos-->
+				<form>
+					<div class="form-group">
+						<input type="text" ng-model= "todos.text" class="form-control input-sm text-center" placeholder="Todotext">
+						<button type="submit" class="btn btn-default btn-sm" ng-click="addTodo(todolist._id)">Add new todo</button>
+					</div>
+
+				</form>
+			</section>
+	</div>
+
+
+</body>
+</html>
