@@ -20,7 +20,7 @@ angular.module('todolistService', [])
 			},
 
 			update : function(id, todotext) {
-				console.log("tododata: " + JSON.stringify(todotext));
+				console.log("The Id of the todolist to be updated: " + id + " tododata: " + JSON.stringify(todotext));
 				return $http.put('/api/todolists/' + id, todotext);
 			}
 		}

@@ -43,7 +43,7 @@ module.exports = function(app) {
 	app.put('/api/todolists/:todolist_id', function (req, res) {
 		var todolist_id = req.params.todolist_id;
 		console.log("Trying to find todolist with id: " + todolist_id);
-		TodoList.findOne(todolist_id, function (err, todolist) {
+		TodoList.findOne({_id: todolist_id}, function (err, todolist) {
 			if(err){
 				console.log("Something went wrong!");
 				res.send(err);
@@ -54,8 +54,10 @@ module.exports = function(app) {
 
 			todolist.save(function(err) {
 				if(err){
+					console.log("something went wrong!");
 					res.send(err);
 				} else {
+					console.log("The updated todolist was: " + todolist);
 					res.json({message: "Todolist updated: "}, todolist);
 				}
 			});
