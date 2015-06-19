@@ -47,7 +47,7 @@
 		</div>
 	</div>
 	<div class="container" name="todolist">
-		<section class="panel panel-default" ng-repeat="todolist in todolists">
+		<div class="panel panel-default" ng-repeat="todolist in todolists">
 			<header class="panel-heading text-center">Index: {{$index + 1}}, {{todolist.title}}
 				<button type="button" class="btn btn-default" aria-label="Delete todolist" ng-click="deleteTodolist(todolist._id)">
  					<i class="fa fa-minus"></i>
@@ -62,11 +62,11 @@
 			</div>
 
 			<!--Form to create new todos, this field is to edit the specific todolist it is in. Not quite working, as the model seem to be the same for all input fields, although the right data is edited. Try to add a dynamically generated name for this field, todolist_0 etc. Try to add ng-form and use the formname.todos.text as model-->
-				<div class="form-group">
-					<input type="text" name="todotext" ng-model= "todolists[$index].text" class="form-control input-sm text-center" placeholder="New todo text">
-					<button type="submit" class="btn btn-default btn-sm" ng-click="addTodo(todolist._id, $index)">Add new todo</button>
-				</div>
-		</section>
+			<div class="form-group">
+				<input type="text" name="todotext" ng-model= "todolists[$index].text" class="form-control input-sm text-center" placeholder="New todo text">
+				<button type="submit" class="btn btn-default btn-sm" ng-click="addTodo(todolist._id, $index)">Add new todo</button>
+			</div>
+		</div>
 	</div>
 
 
