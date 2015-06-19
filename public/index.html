@@ -11,6 +11,7 @@
 
 	<!-- SCROLLS -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 	<style>
 		html 					{ overflow-y:scroll; }
 		body 					{ padding-top:50px; }
@@ -31,33 +32,41 @@
 
 <body ng-controller="mainController">
 
-	<div class="container">
-		<form>
+	<div class="container" name="newtodolist">
+		<div class="row">
 		<!--Input form for creating new todolists - not working right now and should be changed to just a plus sign-->
-			<input type="text" ng-model= "todolist.title" class="form-control input-sm text-center" placeholder="Todolist title">
-
-			<button type="submit" class="btn btn-default btn-sm" ng-click="createTodolist()">Add new todolist</button>
-		</form>
-
+			<!--This changes after what todolist was last tempered with. Making sense because todolist is changing. Is it possible to just bind one way?-->
+			<div class="col-xs-11">
+				<input type="text" ng-model= "newtodolist.title" class="form-control input-sm text-center" placeholder="Todolist title">
+			</div>
+			<div class="col-xs-1">
+				<button type="submit" class="btn btn-default btn-sm" ng-click="createTodolist()">
+					<i class="fa fa-plus"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="container" name="todolist">
 		<section class="panel panel-default" ng-repeat="todolist in todolists">
-				<header class="panel-heading text-center">{{todolist.title}}</header>
+			<header class="panel-heading text-center">Index: {{$index + 1}}, {{todolist.title}}
+				<button type="button" class="btn btn-default" aria-label="Delete todolist" ng-click="deleteTodolist(todolist._id)">
+ 					<i class="fa fa-minus"></i>
+				</button>
+			</header>
 				
-				<!--THE TODOLIST-->
-					<div class="checkbox" ng-repeat="todo in todolist.todos">
-						<label>
-							<input type="checkbox" ng-click="deleteTodo(todolist._id, todo._id)"> {{todo.text}}
-						</label>
-					</div>
+			<!--THE TODOLIST-->
+			<div class="checkbox" ng-repeat="todo in todolist.todos">
+				<label>
+					<input type="checkbox" ng-click="deleteTodo(todolist._id, todo._id)"> {{todo.text}}
+				</label>
+			</div>
 
-				<!--Form to create new todos-->
-				<form>
-					<div class="form-group">
-						<input type="text" ng-model= "todos.text" class="form-control input-sm text-center" placeholder="Todotext">
-						<button type="submit" class="btn btn-default btn-sm" ng-click="addTodo(todolist._id)">Add new todo</button>
-					</div>
-
-				</form>
-			</section>
+			<!--Form to create new todos, this field is to edit the specific todolist it is in. Not quite working, as the model seem to be the same for all input fields, although the right data is edited. Try to add a dynamically generated name for this field, todolist_0 etc. Try to add ng-form and use the formname.todos.text as model-->
+				<div class="form-group">
+					<input type="text" name="todotext" ng-model= "todolists[$index].text" class="form-control input-sm text-center" placeholder="New todo text">
+					<button type="submit" class="btn btn-default btn-sm" ng-click="addTodo(todolist._id, $index)">Add new todo</button>
+				</div>
+		</section>
 	</div>
 
 
