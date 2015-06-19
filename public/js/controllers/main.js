@@ -26,7 +26,6 @@ angular.module('todoController', [])
 		// CREATE ==================================================================
 		// when submitting the add form, send the text to the node API
 		$scope.createTodolist = function() {
-			$scope.newtodolisttitle.show = true;
 			console.log("Checking if something is in the field, todolist.title: " + $scope.newtodolist.title);
 			if ($scope.newtodolist.title != undefined) {
 				$scope.loading = true;
