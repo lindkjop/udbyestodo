@@ -35,7 +35,7 @@ angular.module('todoController', [])
 					// if successful creation, call our get function to get all the new todos
 					.success(function(data) {
 						$scope.loading = false;
-						$scope.todolist = {}; // clear the form so our user is ready to enter another
+						$scope.newtodolist = {}; // clear the form so our user is ready to enter another
 						$scope.todolists = data; // assign our new list of todos
 					});
 			}
@@ -74,8 +74,6 @@ angular.module('todoController', [])
 				//Need to create a todo with given data and then push it to TodoList?
 			}
 		};
-
-
 
 		// DELETE ==================================================================
 		// delete a todolist after checking it
