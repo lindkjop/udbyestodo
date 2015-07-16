@@ -2,15 +2,83 @@ angular.module('todoController', [])
 
 	// inject the Todo service factory into our controller
 	.controller('mainController', ['$scope','$http','Todolists', function($scope, $http, Todolists) {
-		$scope.loading = true;
+		$scope.today = function() {
+			$scope.dt = new Date();
+		};
+		$scope.today();
+
+		$scope.clear = function () {
+			$scope.dt = null;
+		};
+
+		// Disable weekend selection
+		$scope.disabled = function(date, mode) {
+		 	return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+		};
+
+		$scope.toggleMin = function() {
+		 	$scope.minDate = $scope.minDate ? null : new Date();
+		};
+		
+		$scope.toggleMin();
+
+		$scope.open = function($event) {
+			$event.preventDefault();
+		  	$event.stopPropagation();
+
+		  	$scope.opened = true;
+		};
+
+		  $scope.dateOptions = {
+		  	formatYear: 'yy',
+		  	startingDay: 1
+		  };
+
+		  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+		  $scope.format = $scope.formats[0];
+
+		  var tomorrow = new Date();
+		  tomorrow.setDate(tomorrow.getDate() + 1);
+		  var afterTomorrow = new Date();
+		  afterTomorrow.setDate(tomorrow.getDate() + 2);
+		  $scope.events =
+		  [
+		  {
+		  	date: tomorrow,
+		  	status: 'full'
+		  },
+		  {
+		  	date: afterTomorrow,
+		  	status: 'partially'
+		  }
+		  ];
+
+		  $scope.getDayClass = function(date, mode) {
+		  	if (mode === 'day') {
+		  		var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+		  		for (var i=0;i<$scope.events.length;i++){
+		  			var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+
+		  			if (dayToCheck === currentDay) {
+		  				return $scope.events[i].status;
+		  			}
+		  		}
+		  	}
+
+		  	return '';
+		  };
+
+
+  $scope.loading = true;
 		// GET =====================================================================
 		// when landing on the page, get all todolists and show them
 		// use the service to get all the todos
 		Todolists.get()
-			.success(function(data) {
-				$scope.todolists = data;
-				$scope.loading = false;
-			});
+		.success(function(data) {
+			$scope.todolists = data;
+			$scope.loading = false;
+		});
 
 		//Need to update todolists to get the view to update, therefore this method.
 		//Need to do something about it, uglybugly
@@ -38,8 +106,8 @@ angular.module('todoController', [])
 						$scope.newtodolist = {}; // clear the form so our user is ready to enter another
 						$scope.todolists = data; // assign our new list of todos
 					});
-			}
-		};
+				}
+			};
 
 		//ADD A TODO TO A GIVEN TODOLIST ============================================
 
@@ -54,7 +122,7 @@ angular.module('todoController', [])
 				console.log("Todolistid of the list to be updated: " + id);
 				console.log("The data to be updated: " + JSON.stringify($scope.todolist.text));
 				Todolists.update(id, $scope.todolist)
-					.success(function(data) {
+				.success(function(data) {
 						//$scope.loading = false;
 						//The data returned here is this todolist - same as todolist is right now
 						console.log("The data returned is: " + JSON.stringify(data));
@@ -86,15 +154,15 @@ angular.module('todoController', [])
 					console.log("Data returned when deleting: " + JSON.stringify(data));
 					$scope.todolists = data;
 				});
-		};
+			};
 
-		$scope.deleteTodo = function(todolist_id, todo_id) {
-			Todolists.deletetodo(todolist_id, todo_id)
+			$scope.deleteTodo = function(todolist_id, todo_id) {
+				Todolists.deletetodo(todolist_id, todo_id)
 				.success(function(data) {
 					console.log("success when running deletetodo!");
 					$scope.todos = data;
 					$scope.getTodolists();
 				});
-		};
+			};
 
-	}]);
+		}]);
