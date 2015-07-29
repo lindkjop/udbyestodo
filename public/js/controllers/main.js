@@ -2,91 +2,66 @@ angular.module('todoController', [])
 
 	// inject the Todo service factory into our controller
 	.controller('mainController', ['$scope','$http','Todolists', function($scope, $http, Todolists) {
-		$scope.today = function() {
-			$scope.dt = new Date();
-		};
-		$scope.today();
+  		$scope.loading = true;
+  		$scope.showdate = false;
 
-		$scope.clear = function () {
-			$scope.dt = null;
-		};
-
-		// Disable weekend selection
-		$scope.disabled = function(date, mode) {
-		 	return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-		};
-
-		$scope.toggleMin = function() {
-		 	$scope.minDate = $scope.minDate ? null : new Date();
-		};
-		
-		$scope.toggleMin();
-
-		$scope.open = function($event) {
-			$event.preventDefault();
-		  	$event.stopPropagation();
-
-		  	$scope.opened = true;
-		};
-
-		  $scope.dateOptions = {
-		  	formatYear: 'yy',
-		  	startingDay: 1
-		  };
-
-		  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-		  $scope.format = $scope.formats[0];
-
-		  var tomorrow = new Date();
-		  tomorrow.setDate(tomorrow.getDate() + 1);
-		  var afterTomorrow = new Date();
-		  afterTomorrow.setDate(tomorrow.getDate() + 2);
-		  $scope.events =
-		  [
-		  {
-		  	date: tomorrow,
-		  	status: 'full'
-		  },
-		  {
-		  	date: afterTomorrow,
-		  	status: 'partially'
-		  }
-		  ];
-
-		  $scope.getDayClass = function(date, mode) {
-		  	if (mode === 'day') {
-		  		var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-		  		for (var i=0;i<$scope.events.length;i++){
-		  			var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
-
-		  			if (dayToCheck === currentDay) {
-		  				return $scope.events[i].status;
-		  			}
-		  		}
-		  	}
-
-		  	return '';
-		  };
-
-
-  $scope.loading = true;
 		// GET =====================================================================
 		// when landing on the page, get all todolists and show them
 		// use the service to get all the todos
 		Todolists.get()
 		.success(function(data) {
 			$scope.todolists = data;
+			$scope.duedates = [];
+
+			//I want to first collect all todos from a todolist and then map each duedate
+
+			for (var i = 0; i < $scope.todolists.length; i++) {
+				var todos = $scope.todolists[i].todos;
+					var duedatestemp = todos.map(function (todo) {
+						return $scope.calculateDaysTillDue(todo.duedate);
+					});
+				$scope.duedates.push.apply($scope.duedates, duedatestemp);
+			//$scope.duedates.push(duedatestemp);
+				//console.log(todos);
+				//for(var y = 0; y < todos.length; y++){
+
+
+					/*$scope.duedates = todos.map(function (todo) {
+						console.log(todo);
+						console.log(todo.duedate);
+						var oneDay = 24*60*60*1000;
+						var today = new Date();
+						console.log(today);
+						var duedate = new Date(todo.duedate);
+						console.log(duedate);
+
+						$scope.numberofdays = Math.round(Math.abs((today.getTime() - duedate.getTime()) / (oneDay)));
+						//console.log($scope.numberofdays);
+						return $scope.numberofdays;
+					});*/
+				//};
+					//console.log(duedates);
+				//};
+
+			};
+			
+			console.log($scope.duedates);
+			//console.log($scope.duedates);
+
+			//console.log("What is data here?: " + JSON.stringify(data));
+			//console.log("Can I get all duedates?" + JSON.stringify(data.duedate));
 			$scope.loading = false;
 		});
 
 		//Need to update todolists to get the view to update, therefore this method.
 		//Need to do something about it, uglybugly
+		//
 
 		$scope.getTodolists = function() {
 			Todolists.get()
 			.success(function(data) {
 				$scope.todolists = data;
+
 				$scope.loading = false;
 			});
 		};
@@ -121,7 +96,7 @@ angular.module('todoController', [])
 				//$scope.loading = true;
 				console.log("Todolistid of the list to be updated: " + id);
 				console.log("The data to be updated: " + JSON.stringify($scope.todolist.text));
-				Todolists.update(id, $scope.todolist)
+				Todolists.update(id, $scope.todolist, $scope.todolist.duedate)
 				.success(function(data) {
 						//$scope.loading = false;
 						//The data returned here is this todolist - same as todolist is right now
@@ -156,13 +131,40 @@ angular.module('todoController', [])
 				});
 			};
 
-			$scope.deleteTodo = function(todolist_id, todo_id) {
-				Todolists.deletetodo(todolist_id, todo_id)
-				.success(function(data) {
-					console.log("success when running deletetodo!");
-					$scope.todos = data;
-					$scope.getTodolists();
-				});
-			};
+		$scope.deleteTodo = function(todolist_id, todo_id) {
+			Todolists.deletetodo(todolist_id, todo_id)
+			.success(function(data) {
+				console.log("success when running deletetodo!");
+				$scope.todos = data;
+				$scope.getTodolists();
+			});
+		};
 
-		}]);
+		// Calculating how many days till duedate =====================================
+
+		// Returns the days between a & b date objects...
+		function dateDiffInDays(a, b) {
+   			var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+    		// Discard the time and time-zone information.
+    		var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    		var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    		return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+		}
+
+		//This need to be fixed
+		$scope.calculateDaysTillDue = function(duedate) {
+			//console.log(todo);
+			//console.log(todo.duedate);
+			var oneDay = 24*60*60*1000;
+			var today = new Date();
+			console.log(today);
+			var duedate = new Date(duedate);
+			console.log(duedate);
+
+			$scope.numberofdays = Math.round(Math.abs((today.getTime() - duedate.getTime()) / (oneDay)));
+			return $scope.numberofdays;
+		};
+
+	}]);
+
+		

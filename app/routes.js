@@ -49,7 +49,7 @@ module.exports = function(app) {
 				res.send(err);
 			} else {
 				console.log("When altering todolist its value is: " + todolist);
-				todolist.todos.push({title: req.body.title,text: req.body.text, completed: false});
+				todolist.todos.push({title: req.body.title,text: req.body.text, completed: false, duedate: req.body.duedate});
 			}
 
 			todolist.save(function(err) {

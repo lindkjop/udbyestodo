@@ -19,9 +19,9 @@ angular.module('todolistService', [])
 				return $http.delete('/api/todolists/' + listid + "/" + todoid);
 			},
 
-			update : function(id, todotext) {
+			update : function(id, todotext, duedate) {
 				console.log("The Id of the todolist to be updated: " + id + " tododata: " + JSON.stringify(todotext));
-				return $http.put('/api/todolists/' + id, todotext);
+				return $http.put('/api/todolists/' + id, todotext, duedate);
 			}
 		}
 	}]);
