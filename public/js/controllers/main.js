@@ -4,7 +4,26 @@ angular.module('todoController', [])
 	.controller('mainController', ['$scope','$http','Todolists', function($scope, $http, Todolists) {
   		$scope.loading = true;
   		$scope.showdate = false;
+  				
+		/*$scope.today = new Date();
+    	var dd = $scope.today.getDate();
+    	var mm = $scope.today.getMonth()+1; //January is 0!
 
+    	var yyyy = $scope.today.getFullYear();
+    	if(dd<10){
+        	dd='0'+dd
+    	} 
+    	if(mm<10){
+        	mm='0'+mm
+    	} 
+    	//$scope.todayformat = dd+'/'+mm+'/'+yyyy;
+    	$scope.todayformat = yyyy+'-'+mm+'-'+dd;*/
+
+    	$scope.example = {
+         value: new Date()
+       };
+
+    	//debugger;
 		// GET =====================================================================
 		// when landing on the page, get all todolists and show them
 		// use the service to get all the todos
@@ -17,10 +36,11 @@ angular.module('todoController', [])
 
 			for (var i = 0; i < $scope.todolists.length; i++) {
 				var todos = $scope.todolists[i].todos;
+				//var todolist.daystildues = []
 					var duedatestemp = todos.map(function (todo) {
 						return $scope.calculateDaysTillDue(todo.duedate);
 					});
-				$scope.duedates.push.apply($scope.duedates, duedatestemp);
+				$scope.duedates.push(duedatestemp);
 			//$scope.duedates.push(duedatestemp);
 				//console.log(todos);
 				//for(var y = 0; y < todos.length; y++){
@@ -94,19 +114,22 @@ angular.module('todoController', [])
 			console.log("scope.todolists.text:" + $scope.todolist.text);
 			if($scope.todolist.text != undefined) {
 				//$scope.loading = true;
-				console.log("Todolistid of the list to be updated: " + id);
-				console.log("The data to be updated: " + JSON.stringify($scope.todolist.text));
-				Todolists.update(id, $scope.todolist, $scope.todolist.duedate)
+				//console.log("Todolistid of the list to be updated: " + id);
+				console.log("Duedate: " + $scope.example.value);
+
+				//debugger;
+				//Todolist.text is correct - the text in the field
+				Todolists.update(id, $scope.todolist.text, $scope.example)
 				.success(function(data) {
 						//$scope.loading = false;
 						//The data returned here is this todolist - same as todolist is right now
-						console.log("The data returned is: " + JSON.stringify(data));
+						//console.log("The data returned is: " + JSON.stringify(data));
 						//$scope.todo = {}; //Clear the todo field
 						//Need to assign our new todolist
-						console.log("SUccess withupdating");
-						console.log("todolist now: " + JSON.stringify($scope.todolist));
-						console.log("Todolist.todos now: " + JSON.stringify($scope.todolist.todos));
-						console.log("Todolists now: " + JSON.stringify($scope.todolists));
+						//console.log("SUccess withupdating");
+						//console.log("todolist now: " + JSON.stringify($scope.todolist));
+						//console.log("Todolist.todos now: " + JSON.stringify($scope.todolist.todos));
+						//console.log("Todolists now: " + JSON.stringify($scope.todolists));
 						//$scope.todos working, but not updating view.
 						//Same with scope.todolist and scope.todolist.todos
 						$scope.getTodolists();
@@ -156,13 +179,13 @@ angular.module('todoController', [])
 			//console.log(todo);
 			//console.log(todo.duedate);
 			var oneDay = 24*60*60*1000;
-			var today = new Date();
-			console.log(today);
-			var duedate = new Date(duedate);
-			console.log(duedate);
+			//var today = new Date();
+			//console.log($scope.today);
+			//var duedate = new Date(duedate);
+			//console.log(duedate);
 
-			$scope.numberofdays = Math.round(Math.abs((today.getTime() - duedate.getTime()) / (oneDay)));
-			return $scope.numberofdays;
+			//$scope.numberofdays = Math.round((duedate.getTime() - $scope.today.getTime()) / (oneDay));
+			//return $scope.numberofdays;
 		};
 
 	}]);

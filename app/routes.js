@@ -45,19 +45,19 @@ module.exports = function(app) {
 		console.log("Trying to find todolist with id: " + todolist_id);
 		TodoList.findOne({_id: todolist_id}, function (err, todolist) {
 			if(err){
-				console.log("Something went wrong!");
+				//console.log("Something went wrong!");
 				res.send(err);
 			} else {
-				console.log("When altering todolist its value is: " + todolist);
-				todolist.todos.push({title: req.body.title,text: req.body.text, completed: false, duedate: req.body.duedate});
+				console.log(req.body);
+				todolist.todos.push({title: req.body.title,text: req.body.todotext, completed: false, duedate: req.body.duedate});
 			}
 
 			todolist.save(function(err) {
 				if(err){
-					console.log("something went wrong!");
+					//console.log("something went wrong!");
 					res.send(err);
 				} else {
-					console.log("The updated todolist was: " + todolist);
+					//console.log("The updated todolist was: " + todolist);
 					res.json({message: "Todolist updated: "}, todolist);
 				}
 			});
