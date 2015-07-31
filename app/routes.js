@@ -5,21 +5,17 @@ module.exports = function(app) {
 	// api ---------------------------------------------------------------------
 	// get all todolists
 	app.get('/api/todolists', function(req, res) {
-
 		// use mongoose to get all todos in the database
 		TodoList.find(function(err, todolists) {
-
 			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
 			if (err)
 				res.send(err)
-
 			res.json(todolists); // return all todos in JSON format
 		});
 	});
 
 	// create todolist and send back all todolists after creation
 	app.post('/api/todolists', function(req, res) {
-
 		// create a todolist, information comes from AJAX request from Angular
 		TodoList.create({
 			title : req.body.title,

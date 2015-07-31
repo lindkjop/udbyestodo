@@ -1,12 +1,31 @@
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
+
+var Inputodo = new mongoose.Schema({
+  text: { type: String, default: 'No text' }, 
+  completed: { type: Boolean, default: false }, 
+  duedate: { type: Date, default: Date.now }
+});
+
+
+var Predeftodo = new mongoose.Schema({
+  text: { type: String, default: 'No text' }, 
+  completed: { type: Boolean, default: false },
+});
+
+
+var Predeftodolist = new mongoose.Schema({
+	duedate: { type: Date, default: Date.now }, 
+	weekly: { type: Boolean, default: false },
+	todos: [Predeftodo]
+})
+
 var TodoListSchema = new mongoose.Schema({
 	title: String,
-	todos: [{ text: String,
-			  completed: Boolean, 
-              duedate: {type: Date, default: Date.now}
-            }],
+	todos: [Inputodo],
+	predeftodos: [Predeftodo]
 });
 
 module.exports = mongoose.model('TodoList', TodoListSchema);
+module.exports = mongoose.model('Predeftodolist', Predeftodolist);

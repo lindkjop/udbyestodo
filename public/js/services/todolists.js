@@ -24,7 +24,7 @@ angular.module('todolistService', [])
 					
 
 				var params = {'id': id, 'todotext': todotext, 'duedate': duedate};
-				debugger;
+				//debugger;
 				return $http.put('/api/todolists/' + id, params);
 			}
 		}

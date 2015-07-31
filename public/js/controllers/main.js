@@ -28,6 +28,32 @@ angular.module('todoController', [])
 		.success(function(data) {
 
 			$scope.todolists = data;
+			$scope.updateDueUntil();
+			//console.log($scope.duedates);
+			//console.log($scope.duedates);
+
+			//console.log("What is data here?: " + JSON.stringify(data));
+			//console.log("Can I get all duedates?" + JSON.stringify(data.duedate));
+		});
+
+		//Need to update todolists to get the view to update, therefore this method.
+		//Need to do something about it, uglybugly
+		//
+
+		$scope.getTodolists = function() {
+			Todolists.get()
+			.success(function(data) {
+				$scope.todolists = data;
+				$scope.loading = false;
+				
+				for(var index in $scope.todolists){
+					$scope.todolists[index].inputdue = new Date();
+				};
+				$scope.updateDueUntil();
+			});
+		};
+
+		$scope.updateDueUntil = function() {
 			for(var index in $scope.todolists){
 				$scope.todolists[index].inputdue = new Date();
 			};
@@ -41,11 +67,11 @@ angular.module('todoController', [])
 			for (var i = 0; i < $scope.todolists.length; i++) {
 				var todos = $scope.todolists[i].todos;
 				//var todolist.daystildues = []
-					var duedatestemp = todos.map(function (todo) {
-						console.log("todo.duedate: " + todo.duedate);
-						return $scope.calculateDaysTillDue(todo.duedate);
-					});
-			$scope.duedates.push(duedatestemp);
+				var duedatestemp = todos.map(function (todo) {
+					console.log("todo.duedate: " + todo.duedate);
+					return $scope.calculateDaysTillDue(todo.duedate);
+				});
+				$scope.duedates.push(duedatestemp);
 			//$scope.duedates.push(duedatestemp);
 				//console.log(todos);
 				//for(var y = 0; y < todos.length; y++){
@@ -69,28 +95,6 @@ angular.module('todoController', [])
 				//};
 
 			};
-			
-			console.log($scope.duedates);
-			//console.log($scope.duedates);
-
-			//console.log("What is data here?: " + JSON.stringify(data));
-			//console.log("Can I get all duedates?" + JSON.stringify(data.duedate));
-		});
-
-		//Need to update todolists to get the view to update, therefore this method.
-		//Need to do something about it, uglybugly
-		//
-
-		$scope.getTodolists = function() {
-			Todolists.get()
-			.success(function(data) {
-				$scope.todolists = data;
-				$scope.loading = false;
-				
-				for(var index in $scope.todolists){
-					$scope.todolists[index].inputdue = new Date();
-				};
-			});
 		};
 
 		// CREATE ==================================================================

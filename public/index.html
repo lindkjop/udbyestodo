@@ -53,7 +53,8 @@
 					<label>
 						<input type="checkbox" ng-click="deleteTodo(todolist._id, todo._id)"> {{todo.text}}
 					</label>
-					<span class="badge pull-right"> <!--Here I want to show numberofdaysuntil duedate-->
+					<span class="badge pull-right" ng-class="{'alert-warning': duedates[$parent.$index][$index] < 3 && duedates[$parent.$index][$index] > 0,
+					'alert-danger': duedates[$parent.$index][$index] < 1}"> <!--Here I want to show numberofdaysuntil duedate-->
 
 					{{duedates[$parent.$index][$index]}}</span>
 					<!--<div class="pull-right">{{todo.duedate}}</div>-->
