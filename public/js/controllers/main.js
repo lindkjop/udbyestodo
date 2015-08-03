@@ -112,6 +112,7 @@ angular.module('todoController', [])
 						$scope.loading = false;
 						$scope.newtodolist = {}; // clear the form so our user is ready to enter another
 						$scope.todolists = data; // assign our new list of todos
+						$scope.updateDueUntil();
 					});
 				}
 			};
@@ -163,6 +164,7 @@ angular.module('todoController', [])
 				.success(function(data) {
 					console.log("Data returned when deleting: " + JSON.stringify(data));
 					$scope.todolists = data;
+					$scope.updateDueUntil();
 				});
 			};
 
@@ -172,6 +174,7 @@ angular.module('todoController', [])
 				console.log("success when running deletetodo!");
 				$scope.todos = data;
 				$scope.getTodolists();
+				$scope.updateDueUntil();
 			});
 		};
 
