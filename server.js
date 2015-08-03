@@ -19,6 +19,8 @@ app.configure(function() {
 // routes ======================================================================
 require('./app/routes.js')(app);
 
+
+
 //Want to create predeftodos and save them in database if they do not exist
 //Want to update each todolist with predeftodos once a week
 
@@ -31,20 +33,22 @@ var job = new CronJob(new Date(), function() {
   true, /* Start the job right now */
   //timeZone /* Time zone of this job. */
 //);
-var time = false;
-var Predeftodolist = require('./app/models/todolist');
-if(time){
+//var time = false;
+//var Predeftodolist = require('./app/models/todolist');
+
+//Predeftodolist.remove().exec();
+/*if(time){
 
 //Try to retrieve predeftodo, if they do not exist - create array of predeftodos?
 bathroomtodos = new Predeftodolist();
 
-
+FBFriendModel.remove().exec();
 bathroomtodos.update({duedate: new Date(), weekly: true, text: "Noe badete", text: "Enda mer badete", text: "Mest badete"});
 bathroomtodos.save(function (err) {
   if (!err) console.log('Success!');
   	console.log(bathroomtodos);
 });
-};
+};*/
 
 // listen (start app with node server.js) ======================================
 app.listen(port);

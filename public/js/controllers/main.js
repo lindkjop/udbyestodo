@@ -28,6 +28,7 @@ angular.module('todoController', [])
 		.success(function(data) {
 
 			$scope.todolists = data;
+			console.log(data);
 			$scope.updateDueUntil();
 			//console.log($scope.duedates);
 			//console.log($scope.duedates);

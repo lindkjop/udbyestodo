@@ -1,4 +1,6 @@
-var TodoList = require('./models/todolist');
+//var TodoList = require('./models/todolist');
+var mongoose = require('mongoose');
+var models = require('./models/todolist')(mongoose);
 
 module.exports = function(app) {
 
@@ -6,7 +8,8 @@ module.exports = function(app) {
 	// get all todolists
 	app.get('/api/todolists', function(req, res) {
 		// use mongoose to get all todos in the database
-		TodoList.find(function(err, todolists) {
+
+		models.TodoList.find(function(err, todolists) {
 			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
 			if (err)
 				res.send(err)
@@ -17,7 +20,7 @@ module.exports = function(app) {
 	// create todolist and send back all todolists after creation
 	app.post('/api/todolists', function(req, res) {
 		// create a todolist, information comes from AJAX request from Angular
-		TodoList.create({
+		models.TodoList.create({
 			title : req.body.title,
  			//No todos in the list when it is created
 			done : false //What does this line do? Get a invalid json error if removed
@@ -26,7 +29,7 @@ module.exports = function(app) {
 				res.send(err);
 
 			// get and return all the todos after you create another
-			TodoList.find(function(err, todolists) {
+			models.TodoList.find(function(err, todolists) {
 				if (err)
 					res.send(err)
 				res.json(todolists);
@@ -39,7 +42,7 @@ module.exports = function(app) {
 	app.put('/api/todolists/:todolist_id', function (req, res) {
 		var todolist_id = req.params.todolist_id;
 		console.log("Trying to find todolist with id: " + todolist_id);
-		TodoList.findOne({_id: todolist_id}, function (err, todolist) {
+		models.TodoList.findOne({_id: todolist_id}, function (err, todolist) {
 			if(err){
 				//console.log("Something went wrong!");
 				res.send(err);
@@ -63,14 +66,14 @@ module.exports = function(app) {
 
 	// delete a todolist
 	app.delete('/api/todolists/:todolist_id', function(req, res) {
-		TodoList.remove({
+		models.TodoList.remove({
 			_id : req.params.todolist_id
 		}, function(err, todolist) {
 			if (err)
 				res.send(err);
 
 			// get and return all the todos after you create another
-			TodoList.find(function(err, todolists) {
+			models.TodoList.find(function(err, todolists) {
 				if (err)
 					res.send(err)
 				res.json(todolists);
@@ -83,7 +86,7 @@ module.exports = function(app) {
 		var todolist_id = req.params.todolist_id;
 		var todo_id = req.params.todo_id;
 		console.log("Trying to find todolist with id: " + todolist_id + " To delete todo with id: " + todo_id);
-		TodoList.findById(todolist_id, function (err, todolist) {
+		models.TodoList.findById(todolist_id, function (err, todolist) {
 			if(err){
 				res.send(err);
 			} else {
